@@ -7,13 +7,12 @@ import { IoMdSend } from "react-icons/io";
 import { getChannelId, getChannelName } from "../redux/slices/channelSlice";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, orderBy } from "firebase/firestore";
 import { auth, db } from "../fireBase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { serverTimestamp } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { Messages } from "./Messages";
-// import scrollIntoView from "scroll-into-view-if-needed";
 export const ChatSection = () => {
   const channelId = useSelector(getChannelId);
   const channelName = useSelector(getChannelName);
@@ -29,16 +28,18 @@ export const ChatSection = () => {
       collection(
         db,
         `channels/${channelId ? channelId : newChannelId}/messages`
+
+        // orderBy("timestamp", "desc")
       )
+    // db.collection()
   );
 
   const scrollToBottom = () => {
     chatRef.current.scrollIntoView({
       behavior: "smooth",
-      block: "start",
+      block: "end",
     });
   };
-  // const dispatch = useDispatch();
   const addMessageToChannel = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     try {
@@ -64,11 +65,12 @@ export const ChatSection = () => {
     }
   };
   useEffect(() => {
+    console.log(messages);
     if (!channelId) {
       setNewChannelId(localStorage.getItem("id"));
       setNewChannelName(localStorage.getItem("channelName"));
     }
-  }, [channelId]);
+  }, [channelId, messages]);
   return (
     <ChannelContents>
       <ChannelNameAndOnline>
@@ -125,6 +127,7 @@ export const ChatSection = () => {
     </ChannelContents>
   );
 };
+
 //channel content section
 
 const ChannelContents = styled.div`
