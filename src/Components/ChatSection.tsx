@@ -13,7 +13,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { serverTimestamp } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { Messages } from "./Messages";
-
+// import scrollIntoView from "scroll-into-view-if-needed";
 export const ChatSection = () => {
   const channelId = useSelector(getChannelId);
   const channelName = useSelector(getChannelName);
@@ -21,10 +21,9 @@ export const ChatSection = () => {
   const [newChannelId, setNewChannelId] = useState(channelId);
   const [newChannelName, setNewChannelName] = useState(channelName);
   const [message, setMessage] = useState<string>("");
-  // const [messages, setMessages] = useState([] as any);
+  const chatRef = useRef<any>(null);
   const [user] = useAuthState(auth);
   const inputRef = useRef<any>(""); //? fix everything
-  // const q = query(collection(db, `channels/${channelId}/messages`));
   const [messages] = useCollection(
     (channelId || newChannelId) &&
       collection(
@@ -32,6 +31,13 @@ export const ChatSection = () => {
         `channels/${channelId ? channelId : newChannelId}/messages`
       )
   );
+
+  const scrollToBottom = () => {
+    chatRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
   // const dispatch = useDispatch();
   const addMessageToChannel = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -51,7 +57,7 @@ export const ChatSection = () => {
           }
         );
         inputRef.current.value = "";
-        // setMessage("");
+        scrollToBottom();
       }
     } catch (error) {
       alert(error);
@@ -89,6 +95,7 @@ export const ChatSection = () => {
                 photoURL={photoURL}
                 timeStamp={timestamp}
                 key={doc.id}
+                chatRef={chatRef}
               />
             );
           })}
@@ -103,15 +110,14 @@ export const ChatSection = () => {
           <SendMessageInput
             placeholder={
               newChannelId
-                ? `message ${channelName}`
+                ? `message ${channelName ? channelName : newChannelName}`
                 : `Click on channel to chat messaging`
             }
-            // disabled={!newChannel}
             ref={inputRef}
             type="text"
             onChange={(e) => setMessage(e.target.value)}
           ></SendMessageInput>
-          <SendBtn type="submit" disabled={channelId ? false : true}>
+          <SendBtn type="submit">
             <IoMdSend size="25" fill="#fd4c4c" />
           </SendBtn>
         </SendMessage>
@@ -147,11 +153,36 @@ const ChatContainer = styled.div`
   flex-direction: column;
   height: calc(100vh - 70px);
   justify-content: space-between;
+  /* scroll-behavior: smooth; */
 `;
 const ChatIndexContainer = styled.div`
   display: flex;
+  overflow-x: hidden;
+  overflow-y: auto;
+  /* scrollbar-color: black; */
   flex-direction: column;
   margin-top: 2rem;
+  margin-right: 1rem;
+  &::-webkit-scrollbar {
+    width: 9px;
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  &::-webkit-scrollbar-corner {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #4a4d52;
+    border: 2px solid #282a2d;
+    border-radius: 10px;
+  }
 `;
 
 const SendMessage = styled.form`
@@ -162,7 +193,7 @@ const SendMessage = styled.form`
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
-  height: 4rem;
+  min-height: 4rem;
 `;
 const SendMessageInput = styled.input`
   border-style: none;

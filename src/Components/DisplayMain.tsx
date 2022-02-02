@@ -57,6 +57,7 @@ const WrapperDisplayMain = styled.div`
   display: flex;
   flex-direction: row;
   height: 100vh;
+  overflow-y: hidden;
 `;
 const SideBar = styled.div`
   padding: 0.5%;

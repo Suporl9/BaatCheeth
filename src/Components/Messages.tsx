@@ -6,6 +6,7 @@ type PropsTypes = {
   photoURL: string;
   timeStamp: any;
   id: string;
+  chatRef: any;
 };
 export const Messages = ({
   userName,
@@ -13,10 +14,11 @@ export const Messages = ({
   // email,
   photoURL,
   // timeStamp,
+  chatRef,
   id,
 }: PropsTypes) => {
   return (
-    <ChatIndex key={id}>
+    <ChatIndex key={id} ref={chatRef}>
       <ProfilePicAndContent>
         <ProfileLogoChatIndex src={photoURL} alt="profileId" />
         <ChatContents>
@@ -32,7 +34,7 @@ const ChatIndex = styled.div`
   background-color: #1b1b1b;
   margin: 0 1rem 1rem 1rem;
   border-radius: 5px;
-  padding: 2%;
+  padding: 1% 4% 1% 2%;
 `;
 const ProfilePicAndContent = styled.div`
   display: flex;

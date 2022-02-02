@@ -85,7 +85,41 @@ const ServerNameOnTop = styled.div`
 const ChannelAndChannelListContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 8%;
+  margin: 8% 0% 8% 8%;
+  padding-right: 0.9rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* &::-webkit-scrollbar {
+    border: 1px solid black;
+    background-color: #2b2b2b;
+  }
+  &::-webkit-scrollbar {
+    width: 10px;
+    background-color: #2b2b2b;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #2b2b2b;
+  } */
+  &::-webkit-scrollbar {
+    width: 9px;
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  &::-webkit-scrollbar-corner {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #4a4d52;
+    border: 2px solid #282a2d;
+    border-radius: 10px;
+  }
 `;
 const Channel = styled.div`
   display: flex;
