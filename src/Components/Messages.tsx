@@ -81,6 +81,10 @@ const ProfilePicAndContent = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    margin-bottom: 1rem;
+  }
 `;
 const ProfileLogoChatIndex = styled.img`
   width: 3.2rem;
@@ -93,7 +97,6 @@ const ChatContents = styled.div`
   flex-direction: row;
 `;
 const UserNameAndMessage = styled.div`
-  color: #fd4c4c;
   font-size: 18px;
   display: flex;
   flex-direction: column;
@@ -107,6 +110,9 @@ const UserName = styled.div`
 const TimeStamp = styled.div`
   color: #c07cff;
   font-size: 13px;
+  @media (max-width: 768px) {
+    align-self: flex-end;
+  }
 `;
 const UserMessage = styled.span`
   margin: 1rem 0.9rem;
@@ -117,6 +123,8 @@ const TimeStampAndTrash = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  @media (max-width: 768px) {
+  }
 `;
 const TrashDiv = styled.div`
   align-self: flex-end;
@@ -125,4 +133,8 @@ const TrashDiv = styled.div`
   padding: 2%;
   margin-bottom: 10px;
   cursor: pointer;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    margin: 1rem 0 0 0;
+  }
 `;

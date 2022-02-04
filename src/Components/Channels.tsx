@@ -3,30 +3,27 @@ import { BsFillPlusCircleFill } from "react-icons/bs";
 import { HorizontalLine } from "./DisplayMain";
 import { db } from "../fireBase";
 import { useCollection } from "react-firebase-hooks/firestore";
-import { addDoc, collection } from "firebase/firestore";
+import { collection, orderBy, query } from "firebase/firestore";
 // import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setChannelInfo } from "../redux/slices/channelSlice";
+import { useState } from "react";
+import { PopUpAddChannel } from "./PopUpAddChannel";
 
+type PassingProps = {
+  selected?: boolean;
+};
 export const Channels = () => {
-  // const [user, loading] = useAuthState(auth);
-  // const [channels, setChannels] = useState([] as any); // ? fix this later please
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [channels] = useCollection(collection(db, "channels"));
+  const q = query(collection(db, "channels"), orderBy("timestamp", "asc"));
+  const [channels] = useCollection(q);
+  const [isOpen, setIsOpen] = useState<boolean>();
+  // const [isSelected, setIsSelected] = useState<boolean>(false);
 
-  const handleAddChannel = async () => {
-    const addChannel = prompt("Enter new channel Name");
-    try {
-      if (addChannel) {
-        await addDoc(collection(db, "channels"), {
-          channelName: addChannel,
-        });
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  const handleAddChannel = () => {
+    setIsOpen(!isOpen);
   };
 
   const setChannel = (id: string, channelName: string) => {
@@ -36,6 +33,8 @@ export const Channels = () => {
         channelName: channelName,
       })
     );
+    // setIsSelected(true);
+
     localStorage.setItem("id", id);
     localStorage.setItem("channelName", channelName);
 
@@ -53,6 +52,9 @@ export const Channels = () => {
             fill="#fd4c4c"
             size="20"
             onClick={handleAddChannel}
+            style={{
+              cursor: "pointer",
+            }}
           />
         </Channel>
         <ChannelList>
@@ -62,6 +64,7 @@ export const Channels = () => {
               <ChannelListName
                 key={chann.id}
                 onClick={() => setChannel(chann.id, channelName)}
+                // selected={isSelected}
               >
                 {channelName}
               </ChannelListName>
@@ -69,12 +72,14 @@ export const Channels = () => {
           })}
         </ChannelList>
       </ChannelAndChannelListContainer>
+      {isOpen && <PopUpAddChannel handleClose={handleAddChannel} />}
     </ChannelContainer>
   );
 };
 //channel section
 const ChannelContainer = styled.div`
-  width: 22rem;
+  max-width: 17rem;
+  min-width: 17rem;
   background-color: #181818;
   display: flex;
   flex-direction: column;
@@ -89,17 +94,7 @@ const ChannelAndChannelListContainer = styled.div`
   padding-right: 0.9rem;
   overflow-y: auto;
   overflow-x: hidden;
-  /* &::-webkit-scrollbar {
-    border: 1px solid black;
-    background-color: #2b2b2b;
-  }
-  &::-webkit-scrollbar {
-    width: 10px;
-    background-color: #2b2b2b;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #2b2b2b;
-  } */
+
   &::-webkit-scrollbar {
     width: 9px;
     background-color: transparent;
@@ -132,9 +127,13 @@ const ChannelList = styled.div`
   display: flex;
   flex-direction: column;
 `;
-const ChannelListName = styled.div`
-  background-color: #2b2b2b;
+const ChannelListName = styled.div<PassingProps>`
+  :hover {
+    background-color: #2b2b2b;
+  }
+  text-transform: capitalize;
   margin-bottom: 5%;
   padding: 7% 5%;
   cursor: pointer;
+  /* background-color: ${(props) => (props.selected ? "#2b2b2b" : "white")}; */
 `;

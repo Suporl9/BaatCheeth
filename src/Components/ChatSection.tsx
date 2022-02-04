@@ -7,7 +7,7 @@ import { IoMdSend } from "react-icons/io";
 import { getChannelId, getChannelName } from "../redux/slices/channelSlice";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { addDoc, collection, orderBy } from "firebase/firestore";
+import { addDoc, collection, orderBy, query } from "firebase/firestore";
 import { auth, db } from "../fireBase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { serverTimestamp } from "firebase/firestore";
@@ -23,14 +23,13 @@ export const ChatSection = () => {
   const chatRef = useRef<any>(null);
   const [user] = useAuthState(auth);
   const inputRef = useRef<any>(""); //? fix everything
+  const q = query(
+    collection(db, `channels/${channelId ? channelId : newChannelId}/messages`),
+    orderBy("timestamp", "asc")
+  );
   const [messages] = useCollection(
-    (channelId || newChannelId) &&
-      collection(
-        db,
-        `channels/${channelId ? channelId : newChannelId}/messages`
+    (channelId || newChannelId) && q
 
-        // orderBy("timestamp", "desc")
-      )
     // db.collection()
   );
 
@@ -65,12 +64,11 @@ export const ChatSection = () => {
     }
   };
   useEffect(() => {
-    console.log(messages);
     if (!channelId) {
       setNewChannelId(localStorage.getItem("id"));
       setNewChannelName(localStorage.getItem("channelName"));
     }
-  }, [channelId, messages]);
+  }, [channelId]);
   return (
     <ChannelContents>
       <ChannelNameAndOnline>
@@ -130,22 +128,25 @@ export const ChatSection = () => {
 
 //channel content section
 
-const ChannelContents = styled.div`
+export const ChannelContents = styled.div`
   background-color: #2b2b2b;
   width: 100%;
 `;
 const ChannelNameAndOnline = styled.div`
-  padding: 1.37rem;
+  padding: 1.36rem;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 `;
-const ChannelNameOnTop = styled.div``;
+const ChannelNameOnTop = styled.div`
+  text-transform: capitalize;
+`;
 const PeopleOnline = styled.div`
   /* text-transform: capitalize; */
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin-right: 1rem;
 `;
 
 const OnlineIndicator = styled.div`

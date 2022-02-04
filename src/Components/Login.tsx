@@ -15,8 +15,6 @@ export const Login = () => {
   const [user, loading] = useAuthState(auth);
   const navigate = useNavigate();
   const [getChannelInitial] = useCollectionOnce(collection(db, "channels"));
-  // const igd = getChannelInitial?.docs[0].id;
-  // const nameg  getChannelInitial?.docs[0].data().channelName;
   const signInWithGoogle = async (e) => {
     e.preventDefault();
 
@@ -28,7 +26,6 @@ export const Login = () => {
           channelName: getChannelInitial?.docs[0].data().channelName,
         })
       );
-      // console.log(res);
     } catch (error) {
       console.log(error);
     }

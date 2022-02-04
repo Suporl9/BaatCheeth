@@ -4,29 +4,26 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { auth } from "../fireBase";
-import Logo from "../assets/tempLogo.png";
+import Logo from "../assets/baatcheeth.png";
 import { BsFillPlusCircleFill } from "react-icons/bs";
+import { RiLogoutCircleFill } from "react-icons/ri";
 import ServerLogo1 from "../assets/server1.png";
-import ProfilePic from "../assets/aotblackguy.jpg";
+import ProfilePic from "../assets/newprofileimg.png";
 import { Channels } from "./Channels";
 import { ChatSection } from "./ChatSection";
-// import { useSelector, useDispatch } from "react-redux";
-// import { getChannelId } from "../redux/slices/channelSlice";
 
 export const DisplayMain = () => {
   const navigate = useNavigate();
-  // const channelId = useSelector(getChannelId);
   const [user, loading] = useAuthState(auth);
   const logOut = () => {
     signOut(auth);
     navigate("/");
   };
-  // const displayPic = user?.photoURL;
+
   useEffect(() => {
-    console.log(user);
     if (loading) return;
     if (!user) return navigate("/");
-  });
+  }, [user, navigate, loading]);
   return (
     <>
       <WrapperDisplayMain>
@@ -34,7 +31,11 @@ export const DisplayMain = () => {
           <SideBarContainer>
             <TabsContainer>
               <TabSelected>
-                <BaatCheethLogo src={Logo} alt="logo" />
+                <BaatCheethLogo
+                  src={Logo}
+                  alt="logo"
+                  onClick={() => navigate("/home")}
+                />
               </TabSelected>
               <TabSelected>
                 <ServerLogo src={ServerLogo1} alt="logo" />
@@ -43,7 +44,16 @@ export const DisplayMain = () => {
                 <BsFillPlusCircleFill size="25" style={{ margin: "1rem 0" }} />
               </AddServerDiv>
             </TabsContainer>
-            <ProfileLogo src={ProfilePic} onClick={logOut} alt="dwa" />
+            <ProfileLogoAndLogOut>
+              <LogoutIcon onClick={logOut}>
+                <RiLogoutCircleFill size="30" fill="#c07cff" />
+              </LogoutIcon>
+              <ProfileLogo
+                src={user ? user?.photoURL! : ProfilePic}
+                alt="user"
+              />
+            </ProfileLogoAndLogOut>
+            {/* exclamation mark is no null assertion mark */}
           </SideBarContainer>
         </SideBar>
         <Channels />
@@ -53,24 +63,27 @@ export const DisplayMain = () => {
   );
 };
 
-const WrapperDisplayMain = styled.div`
+export const WrapperDisplayMain = styled.div`
   display: flex;
   flex-direction: row;
   height: 100vh;
   overflow-y: hidden;
 `;
-const SideBar = styled.div`
+export const SideBar = styled.div`
   padding: 0.5%;
   font-weight: bold;
   background-color: #2b2b2b;
+  width: 4rem;
 `;
-const TabsContainer = styled.div`
+export const TabsContainer = styled.div`
   list-style: none;
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
-const TabSelected = styled.div`
+export const ProfileLogoAndLogOut = styled(TabsContainer)``;
+
+export const TabSelected = styled.div`
   background-color: #373738;
   cursor: pointer;
   padding: 4% 2%;
@@ -80,7 +93,7 @@ const TabSelected = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-const AddServerDiv = styled.div`
+export const AddServerDiv = styled.div`
   background-color: #373738;
   cursor: pointer;
   width: 100%;
@@ -88,23 +101,35 @@ const AddServerDiv = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-const SideBarContainer = styled.div`
+export const LogoutIcon = styled(AddServerDiv)`
+  margin-bottom: 1.5rem;
+  padding: 15px 0;
+`;
+export const SideBarContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: calc(100vh - 8px);
 `;
-const BaatCheethLogo = styled.img`
-  width: 3.2rem;
-  height: 3rem;
+export const BaatCheethLogo = styled.img`
+  width: 3.3rem;
+  height: 3.1rem;
+  display: flex;
+  margin: 0 1rem 0.4rem 0;
+  /* justify-content: center; */
+  /* align-self: center; */
 `;
-const ServerLogo = styled.img`
+export const ServerLogo = styled.img`
   width: 3.2rem;
   height: 3rem;
   border-radius: 50%;
 `;
-const ProfileLogo = styled(ServerLogo)`
+
+export const ProfileLogo = styled.img`
   margin-bottom: 1rem;
+  width: 3.2rem;
+  height: 3rem;
+  border-radius: 50%;
 `;
 
 export const HorizontalLine = styled.div`
