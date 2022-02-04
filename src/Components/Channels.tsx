@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { BsFillPlusCircleFill } from "react-icons/bs";
-import { HorizontalLine } from "./DisplayMain";
 import { db } from "../fireBase";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { collection, orderBy, query } from "firebase/firestore";
@@ -10,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { setChannelInfo } from "../redux/slices/channelSlice";
 import { useState } from "react";
 import { PopUpAddChannel } from "./PopUpAddChannel";
+import { HorizontalLine } from "./SideBar";
 
 type PassingProps = {
   selected?: boolean;

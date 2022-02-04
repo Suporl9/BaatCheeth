@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
 import styled from "styled-components";
 import { BsCircleFill } from "react-icons/bs";
-import { HorizontalLine } from "./DisplayMain";
 import { BsFillPlusCircleFill } from "react-icons/bs";
 import { IoMdSend } from "react-icons/io";
 import { getChannelId, getChannelName } from "../redux/slices/channelSlice";
@@ -13,6 +12,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { serverTimestamp } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { Messages } from "./Messages";
+import { HorizontalLine } from "./SideBar";
 export const ChatSection = () => {
   const channelId = useSelector(getChannelId);
   const channelName = useSelector(getChannelName);
